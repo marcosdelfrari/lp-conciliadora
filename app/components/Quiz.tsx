@@ -178,11 +178,14 @@ export default function QuizSimulacao({
 
   // Monitora quando o step chega a 4 e chama o callback de quiz completo
   useEffect(() => {
+    console.log("Step atual:", step, "Step anterior:", stepAnteriorRef.current);
     if (step === 4 && onQuizCompleto) {
+      console.log("Chamando onQuizCompleto");
       onQuizCompleto();
       stepAnteriorRef.current = 4;
     } else if (stepAnteriorRef.current === 4 && step !== 4 && onQuizReset) {
       // Resetar quando sair do step 4 (se já estava no step 4 antes)
+      console.log("Chamando onQuizReset");
       onQuizReset();
       stepAnteriorRef.current = step;
     } else {
@@ -269,7 +272,7 @@ export default function QuizSimulacao({
 
   return (
     <div className="bg-white w-full h-full rounded-xl relative flex flex-col items-center justify-center">
-      <div className="mx-auto rounded-xl w-full overflow-y-auto max-h-full">
+      <div className="mx-auto rounded-xl w-full overflow-y-auto max-h-full flex flex-col items-center ">
         <div className="mb-3 sm:mb-4 px-3 sm:px-4 pt-3 sm:pt-4">
           <div className="flex items-center justify-center mb-2"></div>
           <p className="text-[10px] sm:text-xs text-gray-500 text-center">

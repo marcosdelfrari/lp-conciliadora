@@ -22,7 +22,7 @@ export default function HeroSection({ onSimularVendas, mostrarBotao = true }: He
       </div>
 
       <div className="space-y-6 sm:space-y-8">
-        <div>
+        <div className=" flex items-center justify-center">
           <div className="relative hidden sm:block">
             <svg
               className="absolute right-[45%] -top-[70px]"
@@ -54,7 +54,7 @@ export default function HeroSection({ onSimularVendas, mostrarBotao = true }: He
           </div>
           {mostrarBotao && (
             <a
-              className="hidden lg:flex text-sm sm:text-base duration-300 transition-all font-light tracking-wide gap-2 items-center py-2.5 sm:py-3 px-4 sm:px-5 w-fit rounded-full bg-[#103239] hover:bg-[#244C4E] hover:text-white text-[#c3d800] justify-start"
+              className="flex text-sm sm:text-base duration-300 transition-all font-light tracking-wide gap-2 items-center py-2.5 sm:py-3 px-4 sm:px-5 w-fit rounded-full bg-[#103239] hover:bg-[#244C4E] hover:text-white text-[#c3d800] justify-start"
               href="/login"
               target="_blank"
             >

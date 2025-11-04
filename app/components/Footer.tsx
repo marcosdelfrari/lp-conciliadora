@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <div className="absolute bottom-4 sm:bottom-6 lg:bottom-10 left-1/2 transform -translate-x-1/2">
+    <div className="absolute bottom-4 lg:bottom-5 left-1/2 transform -translate-x-1/2">
       <div className="flex items-end gap-3 sm:gap-4 opacity-80 brightness-0 invert">
         <Image
           src="/logo.svg"

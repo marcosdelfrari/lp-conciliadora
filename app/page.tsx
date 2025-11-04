@@ -88,38 +88,24 @@ function HomeContent() {
             </>
           ) : (
             <>
-              {/* Quiz primeiro em mobile, segundo em desktop */}
-              <div className="order-1 lg:order-2 rounded-xl sm:rounded-xl space-y-4 bg-gray-100 overflow-hidden relative">
-                <Quiz
-                  onVoltar={() => setMostrarCalculadora(false)}
-                  onQuizCompleto={() => setQuizCompleto(true)}
-                  onQuizReset={() => setQuizCompleto(false)}
-                />
-                {/* Botão "Garanta essa taxa" abaixo do Quiz em mobile quando completo */}
-                {quizCompleto && (
-                  <div className="lg:hidden px-4 pb-4">
-                    <a
-                      className="text-sm duration-300 transition-all font-light tracking-wide flex gap-2 items-center py-2.5 px-4 w-full rounded-full bg-[#103239] hover:bg-[#244C4E] hover:text-white text-[#c3d800] justify-center"
-                      href="/login"
-                      target="_blank"
-                    >
-                      Garanta essa taxa
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                )}
+              {/* Container do Quiz e botão - primeiro em mobile, segundo em desktop */}
+              <div className="order-1 lg:order-2 space-y-4">
+                {/* Quiz */}
+                <div className="rounded-xl sm:rounded-xl bg-gray-100 overflow-hidden relative h-full">
+                  <Quiz
+                    onVoltar={() => setMostrarCalculadora(false)}
+                    onQuizCompleto={() => {
+                      console.log("Quiz completo! Mostrando botão...");
+                      setQuizCompleto(true);
+                    }}
+                    onQuizReset={() => {
+                      console.log("Quiz resetado! Escondendo botão...");
+                      setQuizCompleto(false);
+                    }}
+                  />
+                </div>
+
+             
               </div>
 
               {/* Hero segundo em mobile, primeiro em desktop */}
