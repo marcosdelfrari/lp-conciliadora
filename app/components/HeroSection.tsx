@@ -58,12 +58,8 @@ export default function HeroSection({ onSimularVendas }: HeroSectionProps) {
             Garanta essa taxa
             <ChevronRightIcon className="w-6 h-6" />
           </a>
-          <button
-            onClick={onSimularVendas}
-            className="pl-1 pt-4 rounded-full text-sm font-semibold transition-opacity hover:opacity-90 text-[#103239] underline"
-          >
-            Simule Vendas
-          </button>
+        
+       
         </div>
       </div>
     </div>

@@ -13,8 +13,8 @@ export default function SavingsTable({ data, nome }: SavingsTableProps) {
   return (
     <div className="space-y-4 p-4 lg:p-5">
       {/* Alerta de Economia */}
-      <div className="relative rounded-lg p-5 lg:p-6 bg-[#c3d800]">
-        <p className="text-sm lg:text-base font-semibold mb-2 text-[#103239]">
+      <div className="relative rounded-lg p-3 lg:p-4 bg-[#c3d800] flex items-center justify-between gap-2">
+      <div>  <p className="text-sm lg:text-base font-semibold mb-2 text-[#103239]">
           Economize
         </p>
         <p className="text-3xl lg:text-4xl font-black mb-1 text-[#103239]">
@@ -24,16 +24,17 @@ export default function SavingsTable({ data, nome }: SavingsTableProps) {
             maximumFractionDigits: 2,
           })}
         </p>
-
-        {/* Título do adquirente */}
         {nome && (
-          <div className="px-4 pt-4 pb-2">
-            <p className="text-sm text-[#103239] opacity-80 mb-1">
-              Taxas da sua adquirente:
+          <div className="">
+            <p className="text-sm text-[#103239] opacity-80 mb-1 ">
+            Comparando com suas taxas da <b className="text-black">{nome}</b>
             </p>
-            <h3 className="text-lg font-bold text-[#103239]">{nome}</h3>
+       
           </div>
         )}
+</div>
+       
+       
       </div>
 
       {/* Tabela */}
