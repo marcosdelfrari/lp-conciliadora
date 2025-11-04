@@ -272,7 +272,7 @@ export default function QuizSimulacao({
 
   return (
     <div className="bg-white w-full h-full rounded-xl relative flex flex-col items-center justify-center">
-      <div className="mx-auto rounded-xl w-full overflow-y-auto max-h-full flex flex-col items-center ">
+      <div className="mx-auto rounded-xl w-full overflow-y-auto max-h-full flex flex-col lg:items-center ">
         <div className="mb-3 sm:mb-4 px-3 sm:px-4 pt-3 sm:pt-4">
           <div className="flex items-center justify-center mb-2"></div>
           <p className="text-[10px] sm:text-xs text-gray-500 text-center">
@@ -287,7 +287,7 @@ export default function QuizSimulacao({
         </div>
 
         {step === 1 && (
-          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4">
+          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4 w-full">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 text-center">
               Qual o valor da venda?
             </h2>
@@ -340,7 +340,7 @@ export default function QuizSimulacao({
         )}
 
         {step === 2 && (
-          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4">
+          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4 w-full">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 text-center">
               Qual a modalidade?
             </h2>
@@ -444,7 +444,7 @@ export default function QuizSimulacao({
         )}
 
         {step === 3 && (
-          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4">
+          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4 w-full">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 text-center">
               Qual a bandeira?
             </h2>
@@ -634,7 +634,7 @@ export default function QuizSimulacao({
         )}
 
         {step === 5 && (
-          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4">
+          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4 w-full">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 text-center">
               O que deseja fazer?
             </h2>
@@ -705,7 +705,7 @@ export default function QuizSimulacao({
         )}
 
         {step === 6 && (
-          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4">
+          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4 w-full">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 text-center">
               Qual sua taxa atual?
             </h2>
@@ -767,7 +767,7 @@ export default function QuizSimulacao({
         )}
 
         {step === 7 && (
-          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4">
+          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4 w-full">
             <div className="text-center mb-3 sm:mb-4">
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
                 <svg

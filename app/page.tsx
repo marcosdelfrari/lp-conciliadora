@@ -104,8 +104,6 @@ function HomeContent() {
                     }}
                   />
                 </div>
-
-             
               </div>
 
               {/* Hero segundo em mobile, primeiro em desktop */}
@@ -113,6 +111,7 @@ function HomeContent() {
                 <HeroSection
                   onSimularVendas={() => setMostrarCalculadora(true)}
                   mostrarBotao={true}
+                  mostrarBotaoMobile={quizCompleto}
                 />
               </div>
             </>

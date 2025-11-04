@@ -5,9 +5,14 @@ import { ChevronRightIcon } from "lucide-react";
 interface HeroSectionProps {
   onSimularVendas: () => void;
   mostrarBotao?: boolean;
+  mostrarBotaoMobile?: boolean;
 }
 
-export default function HeroSection({ onSimularVendas, mostrarBotao = true }: HeroSectionProps) {
+export default function HeroSection({
+  onSimularVendas,
+  mostrarBotao = true,
+  mostrarBotaoMobile = false,
+}: HeroSectionProps) {
   return (
     <div className="flex flex-col justify-center space-y-6 sm:space-y-8 lg:space-y-14 px-4 sm:px-6 lg:px-12 py-6 sm:py-8 lg:py-0">
       <div className="space-y-2 sm:space-y-3">
@@ -22,7 +27,7 @@ export default function HeroSection({ onSimularVendas, mostrarBotao = true }: He
       </div>
 
       <div className="space-y-6 sm:space-y-8">
-        <div className=" flex items-center justify-center">
+        <div>
           <div className="relative hidden sm:block">
             <svg
               className="absolute right-[45%] -top-[70px]"
@@ -52,9 +57,21 @@ export default function HeroSection({ onSimularVendas, mostrarBotao = true }: He
               ></path>
             </svg>
           </div>
+          {/* Desktop: sempre mostra se mostrarBotao for true */}
+          {/* Mobile: só mostra se mostrarBotaoMobile for true (quando quiz completo) */}
           {mostrarBotao && (
             <a
-              className="flex text-sm sm:text-base duration-300 transition-all font-light tracking-wide gap-2 items-center py-2.5 sm:py-3 px-4 sm:px-5 w-fit rounded-full bg-[#103239] hover:bg-[#244C4E] hover:text-white text-[#c3d800] justify-start"
+              className="hidden lg:flex text-sm sm:text-base duration-300 transition-all font-light tracking-wide gap-2 items-center py-2.5 sm:py-3 px-4 sm:px-5 w-fit rounded-full bg-[#103239] hover:bg-[#244C4E] hover:text-white text-[#c3d800] justify-start"
+              href="/login"
+              target="_blank"
+            >
+              Garanta essa taxa
+              <ChevronRightIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+            </a>
+          )}
+          {mostrarBotaoMobile && (
+            <a
+              className="flex lg:hidden text-sm sm:text-base duration-300 transition-all font-light tracking-wide gap-2 items-center py-2.5 sm:py-3 px-4 sm:px-5 w-full rounded-full bg-[#103239] hover:bg-[#244C4E] hover:text-white text-[#c3d800] justify-center"
               href="/login"
               target="_blank"
             >
@@ -67,4 +84,3 @@ export default function HeroSection({ onSimularVendas, mostrarBotao = true }: He
     </div>
   );
 }
-
