@@ -17,7 +17,7 @@ export default function SavingsTable({ data, nome }: SavingsTableProps) {
       <div>  <p className="text-sm lg:text-base font-semibold mb-2 text-[#103239]">
           Economize
         </p>
-        <p className="text-3xl lg:text-4xl font-black mb-1 text-[#103239]">
+       <div className="flex items-end gap-2"> <p className="text-3xl lg:text-4xl font-black mb-1 text-[#103239]">
           R${" "}
           {totalEconomia.toLocaleString("pt-BR", {
             minimumFractionDigits: 2,
@@ -26,12 +26,12 @@ export default function SavingsTable({ data, nome }: SavingsTableProps) {
         </p>
         {nome && (
           <div className="">
-            <p className="text-sm text-[#103239] opacity-80 mb-1 ">
-            Comparando com suas taxas da <b className="text-black">{nome}</b>
+            <p className="text-sm text-[#103239] opacity-80 mb-2 ">
+            Em relação as taxas da <b className="text-black">{nome}</b>
             </p>
        
           </div>
-        )}
+        )}</div>
 </div>
        
        

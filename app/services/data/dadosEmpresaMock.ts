@@ -78,12 +78,6 @@ export const DADOS_EMPRESA_JSON_MOCK: DadosEmpresaJson = {
             taxa: 2.1,
             valor: 18765.43,
           },
-          {
-            bandeira: "ELO",
-            modalidade: "DÉBITO",
-            taxa: 1.2,
-            valor: 26789.01,
-          },
         ],
       },
       {
@@ -148,6 +142,72 @@ export const DADOS_EMPRESA_JSON_MOCK: DadosEmpresaJson = {
             modalidade: "CRÉDITO À VISTA",
             taxa: 2.15,
             valor: 15000.0,
+          },
+        ],
+      },
+      {
+        nome: "Adyen",
+        bandeiras: [
+          {
+            bandeira: "MASTER",
+            modalidade: "DÉBITO",
+            taxa: 1.15,
+            valor: 42000.0,
+          },
+          {
+            bandeira: "MASTER",
+            modalidade: "CRÉDITO À VISTA",
+            taxa: 1.95,
+            valor: 32000.0,
+          },
+          {
+            bandeira: "MASTER",
+            modalidade: "CRÉDITO 2x-6x",
+            taxa: 2.45,
+            valor: 72000.0,
+          },
+
+          {
+            bandeira: "VISA",
+            modalidade: "CRÉDITO À VISTA",
+            taxa: 2.0,
+            valor: 35000.0,
+          },
+          {
+            bandeira: "VISA",
+            modalidade: "CRÉDITO 2x-6x",
+            taxa: 2.28,
+            valor: 65000.0,
+          },
+          {
+            bandeira: "VISA",
+            modalidade: "CRÉDITO 7x-12x",
+            taxa: 2.55,
+            valor: 30000.0,
+          },
+          {
+            bandeira: "AMEX",
+            modalidade: "CRÉDITO À VISTA",
+            taxa: 2.6,
+            valor: 18000.0,
+          },
+          {
+            bandeira: "AMEX",
+            modalidade: "CRÉDITO 2x-6x",
+            taxa: 3.15,
+            valor: 15000.0,
+          },
+          {
+            bandeira: "ELO",
+            modalidade: "DÉBITO",
+            taxa: 1.2,
+            valor: 20000.0,
+          },
+          {
+            bandeira: "ELO",
+            modalidade: "CRÉDITO À VISTA",
+            taxa: 2.05,
+            valor: 17000.0,
           },
         ],
       },

@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import CustomSelect, { SelectOption } from "./CustomSelect";
 import CustomInput from "./CustomInput";
+import { MCC_TAXAS } from "../services/data/mccTaxas";
+import { Bandeira, Modalidade } from "../types";
 
 interface QuizSimulacaoProps {
   onVoltar?: () => void;
@@ -12,7 +14,6 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
   const [step, setStep] = useState(1);
   const [valorVenda, setValorVenda] = useState(1000);
   const [suaTaxa, setSuaTaxa] = useState(4.0);
-  const [taxaIndicada] = useState(3.08);
   const [modalidade, setModalidade] = useState<string | null>(null);
   const [bandeira, setBandeira] = useState<string | null>(null);
   const [escolha, setEscolha] = useState<string | null>(null);
@@ -25,6 +26,99 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
   const [showTaxaModal, setShowTaxaModal] = useState(false);
   const [novaTaxa, setNovaTaxa] = useState(suaTaxa);
   const taxaInputRef = useRef<HTMLDivElement>(null);
+  const [taxaAlteradaManual, setTaxaAlteradaManual] = useState(false);
+
+  // Função para calcular taxa média baseada em bandeira e modalidade
+  const calcularTaxaMedia = (
+    bandeira: string | null,
+    modalidade: string | null
+  ): number => {
+    if (!bandeira || !modalidade) return 3.08; // Taxa padrão se não houver seleção
+
+    // Taxas por bandeira e modalidade (conforme fornecido pelo usuário)
+    const taxas: Record<string, Record<string, number>> = {
+      master: {
+        debito: 1.2,
+        "credito-vista": 1.99,
+        "credito-2-6x": 2.5, // Média de 2x a 6x (todas 2.5)
+        "credito-7-12x": 2.7, // Média de 7x a 12x (todas 2.7)
+      },
+      visa: {
+        debito: 1.2,
+        "credito-vista": 2.05,
+        "credito-2-6x": 2.32, // Média de 2x a 6x (todas 2.32)
+        "credito-7-12x": 2.6, // Média de 7x a 12x (todas 2.6)
+      },
+      elo: {
+        debito: 1.2,
+        "credito-vista": 2.1,
+        "credito-2-6x": 2.32, // Estimativa baseada na média (não especificado, usando média entre débito e crédito)
+        "credito-7-12x": 2.6, // Estimativa baseada na média
+      },
+      amex: {
+        debito: 1.2, // Não especificado, usando padrão
+        "credito-vista": 2.7,
+        "credito-2-6x": 3.26, // AMEX CRÉDITO PARCELADO
+        "credito-7-12x": 3.26, // AMEX CRÉDITO PARCELADO
+      },
+      hiper: {
+        debito: 1.2, // Não especificado, usando padrão
+        "credito-vista": 2.05, // Estimativa baseada em Visa
+        "credito-2-6x": 2.32, // Estimativa baseada em Visa
+        "credito-7-12x": 2.6, // Estimativa baseada em Visa
+      },
+    };
+
+    return taxas[bandeira]?.[modalidade] || 3.08;
+  };
+
+  // Função para calcular taxa indicada baseada no MCC 5813
+  const calcularTaxaIndicada = (
+    bandeira: string | null,
+    modalidade: string | null
+  ): number => {
+    if (!bandeira || !modalidade) return 3.08; // Taxa padrão se não houver seleção
+
+    // Mapear bandeira do quiz para tipo Bandeira
+    const bandeiraMap: Record<string, Bandeira> = {
+      master: "MASTER",
+      visa: "VISA",
+      elo: "ELO",
+      amex: "AMEX",
+      hiper: "HIPER",
+    };
+
+    // Mapear modalidade do quiz para tipo Modalidade
+    const modalidadeMap: Record<string, Modalidade> = {
+      debito: "DEBITO",
+      "credito-vista": "CREDITO_A_VISTA",
+      "credito-2-6x": "CREDITO_2_A_6",
+      "credito-7-12x": "CREDITO_7_A_12",
+    };
+
+    const bandeiraTipo = bandeiraMap[bandeira];
+    const modalidadeTipo = modalidadeMap[modalidade];
+
+    if (!bandeiraTipo || !modalidadeTipo) return 3.08;
+
+    // Buscar taxa do MCC 5813
+    const mccTaxas = MCC_TAXAS[5813];
+    if (!mccTaxas) return 3.08;
+
+    const taxasModalidade = mccTaxas[modalidadeTipo];
+    if (!taxasModalidade) return 3.08;
+
+    const taxa = taxasModalidade[bandeiraTipo];
+    return taxa !== undefined ? taxa : 3.08;
+  };
+
+  const taxaIndicada = calcularTaxaIndicada(bandeira, modalidade);
+
+  // Taxa média calculada automaticamente baseada nas seleções
+  const taxaMedia = calcularTaxaMedia(bandeira, modalidade);
+
+  // Usar taxa manual se foi alterada, senão usar taxa média calculada
+  const taxaAtual = taxaAlteradaManual ? suaTaxa : taxaMedia;
 
   const calcularValores = (taxa: number) => {
     return (valorVenda * taxa) / 100;
@@ -82,13 +176,27 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
     { id: "credito-7-12x", label: "Crédito 7-12x" },
   ];
 
-  const bandeiras = [
+  const todasBandeiras = [
     { id: "master", label: "Master" },
     { id: "visa", label: "Visa" },
     { id: "elo", label: "Elo" },
     { id: "amex", label: "Amex" },
     { id: "hiper", label: "Hiper" },
   ];
+
+  // Filtrar bandeiras baseado na modalidade selecionada
+  const getBandeirasDisponiveis = () => {
+    // Se modalidade for parcelado (credito-2-6x ou credito-7-12x), mostrar apenas Master e Visa
+    if (modalidade === "credito-2-6x" || modalidade === "credito-7-12x") {
+      return todasBandeiras.filter(
+        (band) => band.id === "master" || band.id === "visa"
+      );
+    }
+    // Caso contrário, mostrar todas as bandeiras
+    return todasBandeiras;
+  };
+
+  const bandeiras = getBandeirasDisponiveis();
 
   const handleNext = () => {
     setStep(step + 1);
@@ -102,6 +210,7 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
     setStep(1);
     setValorVenda(1000);
     setSuaTaxa(4.0);
+    setTaxaAlteradaManual(false);
     setModalidade(null);
     setBandeira(null);
     setEscolha(null);
@@ -117,13 +226,14 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
   };
 
   const handleAbrirModalTaxa = () => {
-    setNovaTaxa(suaTaxa);
+    setNovaTaxa(taxaAtual);
     setShowTaxaModal(true);
   };
 
   const handleConfirmarTaxa = (valorFinal?: number) => {
     const valorParaUsar = valorFinal !== undefined ? valorFinal : novaTaxa;
     setSuaTaxa(valorParaUsar);
+    setTaxaAlteradaManual(true);
     setShowTaxaModal(false);
   };
 
@@ -150,10 +260,10 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
 
         {step === 1 && (
           <div className="bg-white rounded-lg p-4 transition-all">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
               Qual o valor da venda?
             </h2>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-600 mb-4 text-center">
               Insira o valor da transação que deseja simular.
             </p>
 
@@ -167,9 +277,12 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                 </span>
                 <input
                   type="number"
-                  value={valorVenda}
-                  onChange={(e) => setValorVenda(Number(e.target.value))}
-                  className="w-full pl-10 pr-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-black text-base font-semibold"
+                  value={valorVenda || ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setValorVenda(val === "" ? 0 : Number(val));
+                  }}
+                  className="w-full pl-10 pr-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-black text-base font-semibold text-gray-900"
                   placeholder="1000"
                 />
               </div>
@@ -178,16 +291,18 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
             <button
               onClick={handleNext}
               disabled={!valorVenda || valorVenda <= 0}
-              className="w-full mt-4 text-white py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
-              style={{ backgroundColor: "#d10339" }}
+              className="w-full mt-4 py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
+              style={{ backgroundColor: "#103239", color: "#c3d800" }}
               onMouseEnter={(e) => {
                 if (!e.currentTarget.disabled) {
                   e.currentTarget.style.backgroundColor = "#c3d800";
+                  e.currentTarget.style.color = "#103239";
                 }
               }}
               onMouseLeave={(e) => {
                 if (!e.currentTarget.disabled) {
-                  e.currentTarget.style.backgroundColor = "#d10339";
+                  e.currentTarget.style.backgroundColor = "#103239";
+                  e.currentTarget.style.color = "#c3d800";
                 }
               }}
             >
@@ -198,10 +313,10 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
 
         {step === 2 && (
           <div className="bg-white rounded-lg p-4 transition-all">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
               Qual a modalidade?
             </h2>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-600 mb-4 text-center">
               Selecione a forma de pagamento.
             </p>
 
@@ -209,7 +324,19 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
               {modalidades.map((mod) => (
                 <button
                   key={mod.id}
-                  onClick={() => setModalidade(mod.id)}
+                  onClick={() => {
+                    setModalidade(mod.id);
+                    // Se mudou para parcelado e tinha uma bandeira selecionada que não está disponível, limpar seleção
+                    if (
+                      (mod.id === "credito-2-6x" ||
+                        mod.id === "credito-7-12x") &&
+                      bandeira &&
+                      bandeira !== "master" &&
+                      bandeira !== "visa"
+                    ) {
+                      setBandeira(null);
+                    }
+                  }}
                   className={`w-full p-3 rounded-lg border-2 text-left transition-all ${
                     modalidade === mod.id
                       ? "bg-gray-50"
@@ -217,7 +344,7 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                   }`}
                   style={
                     modalidade === mod.id
-                      ? { borderColor: "#d10339", borderWidth: "2px" }
+                      ? { borderColor: "#103239", borderWidth: "2px" }
                       : {}
                   }
                 >
@@ -232,8 +359,8 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                       style={
                         modalidade === mod.id
                           ? {
-                              borderColor: "#d10339",
-                              backgroundColor: "#d10339",
+                              borderColor: "#103239",
+                              backgroundColor: "#103239",
                             }
                           : {}
                       }
@@ -267,16 +394,18 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
               <button
                 onClick={handleNext}
                 disabled={!modalidade}
-                className="flex-1 text-white py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
-                style={{ backgroundColor: "#d10339" }}
+                className="flex-1 py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
+                style={{ backgroundColor: "#103239", color: "#c3d800" }}
                 onMouseEnter={(e) => {
                   if (!e.currentTarget.disabled) {
                     e.currentTarget.style.backgroundColor = "#c3d800";
+                    e.currentTarget.style.color = "#103239";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!e.currentTarget.disabled) {
-                    e.currentTarget.style.backgroundColor = "#d10339";
+                    e.currentTarget.style.backgroundColor = "#103239";
+                    e.currentTarget.style.color = "#c3d800";
                   }
                 }}
               >
@@ -288,10 +417,10 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
 
         {step === 3 && (
           <div className="bg-white rounded-lg p-4 transition-all">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
               Qual a bandeira?
             </h2>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-600 mb-4 text-center">
               Selecione a bandeira do cartão.
             </p>
 
@@ -307,7 +436,7 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                   }`}
                   style={
                     bandeira === band.id
-                      ? { borderColor: "#d10339", borderWidth: "2px" }
+                      ? { borderColor: "#103239", borderWidth: "2px" }
                       : {}
                   }
                 >
@@ -322,8 +451,8 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                       style={
                         bandeira === band.id
                           ? {
-                              borderColor: "#d10339",
-                              backgroundColor: "#d10339",
+                              borderColor: "#103239",
+                              backgroundColor: "#103239",
                             }
                           : {}
                       }
@@ -357,16 +486,18 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
               <button
                 onClick={handleNext}
                 disabled={!bandeira}
-                className="flex-1 text-white py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
-                style={{ backgroundColor: "#d10339" }}
+                className="flex-1 py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
+                style={{ backgroundColor: "#103239", color: "#c3d800" }}
                 onMouseEnter={(e) => {
                   if (!e.currentTarget.disabled) {
                     e.currentTarget.style.backgroundColor = "#c3d800";
+                    e.currentTarget.style.color = "#103239";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!e.currentTarget.disabled) {
-                    e.currentTarget.style.backgroundColor = "#d10339";
+                    e.currentTarget.style.backgroundColor = "#103239";
+                    e.currentTarget.style.color = "#c3d800";
                   }
                 }}
               >
@@ -380,7 +511,7 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
           <div className=" rounded-lg p-4 transition-all">
             <div className="space-y-4 mb-6">
               <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
+                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 text-center">
                   Valor da venda
                 </p>
                 <CustomInput
@@ -403,7 +534,7 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
+                  <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 text-center">
                     Modalidade
                   </p>
                   <CustomSelect
@@ -415,7 +546,7 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                 </div>
 
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
+                  <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 text-center">
                     Bandeira
                   </p>
                   <CustomSelect
@@ -430,15 +561,15 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
 
             <div className="grid grid-cols-2 gap-4 mb-4 ">
               <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
-                  Sua taxa atual
+                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 text-center">
+                  {taxaAlteradaManual ? "Sua taxa" : "Taxa média"}
                 </p>
-                <p className="text-2xl font-bold mb-1 text-gray-900">
-                  {suaTaxa}%
+                <p className="text-2xl font-bold mb-1 text-gray-900 text-center">
+                  {taxaAtual.toFixed(2)}%
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 text-center">
                   R${" "}
-                  {calcularValores(suaTaxa).toLocaleString("pt-BR", {
+                  {calcularValores(taxaAtual).toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
@@ -446,14 +577,16 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
               </div>
 
               <div
-                className="rounded-lg p-4 text-white"
-                style={{ backgroundColor: "#d10339" }}
+                className="rounded-lg p-4"
+                style={{ backgroundColor: "#103239", color: "#c3d800" }}
               >
-                <p className="text-xs font-semibold opacity-90 uppercase tracking-wide mb-2">
+                <p className="text-xs font-semibold opacity-90 uppercase tracking-wide mb-2 text-center">
                   Taxa indicada
                 </p>
-                <p className="text-2xl font-bold mb-1">{taxaIndicada}%</p>
-                <p className="text-sm opacity-75">
+                <p className="text-2xl font-bold mb-1 text-center">
+                  {taxaIndicada}%
+                </p>
+                <p className="text-sm opacity-75 text-center">
                   R${" "}
                   {calcularValores(taxaIndicada).toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
@@ -464,9 +597,9 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
 
               <button
                 onClick={handleAbrirModalTaxa}
-                className=" rounded-full cursor-pointer  text-sm  text-right tracking-wide transition-opacity hover:opacity-90 text-gray-500 underline text-left"
+                className="col-span-2 rounded-full cursor-pointer text-sm text-center tracking-wide transition-opacity hover:opacity-90 text-gray-500 underline"
               >
-                Altera a taxa
+                Alterar taxa média manualmente
               </button>
             </div>
           </div>
@@ -474,10 +607,10 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
 
         {step === 5 && (
           <div className="bg-white rounded-lg p-4 transition-all">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
               O que deseja fazer?
             </h2>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-600 mb-4 text-center">
               Escolha uma das opções abaixo.
             </p>
 
@@ -545,10 +678,10 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
 
         {step === 6 && (
           <div className="bg-white rounded-lg p-4 transition-all">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
               Qual sua taxa atual?
             </h2>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-600 mb-4 text-center">
               Insira a taxa que você paga atualmente para compararmos.
             </p>
 
@@ -579,18 +712,23 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                 Voltar
               </button>
               <button
-                onClick={handleNext}
+                onClick={() => {
+                  setTaxaAlteradaManual(true);
+                  handleNext();
+                }}
                 disabled={!suaTaxa || suaTaxa <= 0}
-                className="flex-1 text-white py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
-                style={{ backgroundColor: "#d10339" }}
+                className="flex-1 py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
+                style={{ backgroundColor: "#103239", color: "#c3d800" }}
                 onMouseEnter={(e) => {
                   if (!e.currentTarget.disabled) {
                     e.currentTarget.style.backgroundColor = "#c3d800";
+                    e.currentTarget.style.color = "#103239";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!e.currentTarget.disabled) {
-                    e.currentTarget.style.backgroundColor = "#d10339";
+                    e.currentTarget.style.backgroundColor = "#103239";
+                    e.currentTarget.style.color = "#c3d800";
                   }
                 }}
               >
@@ -627,47 +765,56 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
             </div>
 
             <div className="space-y-2 mb-4">
-              <div className="bg-red-50 rounded-lg p-3 border-2 border-red-200">
-                <p className="text-xs font-semibold text-red-700 mb-0.5">
-                  Sua taxa atual ({suaTaxa}%)
+              <div
+                className="rounded-lg p-3 border-2"
+                style={{
+                  backgroundColor: "#103239",
+                  borderColor: "#103239",
+                  color: "#c3d800",
+                }}
+              >
+                <p className="text-xs font-semibold mb-0.5 opacity-90 text-center">
+                  {taxaAlteradaManual ? "Sua taxa" : "Taxa média"} (
+                  {taxaAtual.toFixed(2)}%)
                 </p>
-                <p className="text-xl font-bold text-red-600">
-                  R$ {calcularValores(suaTaxa).toFixed(2)}
+                <p className="text-xl font-bold text-center">
+                  R$ {calcularValores(taxaAtual).toFixed(2)}
                 </p>
-                <p className="text-xs text-red-600 mt-0.5">
+                <p className="text-xs mt-0.5 opacity-75 text-center">
                   Valor que você paga por transação
                 </p>
               </div>
 
               <div className="bg-green-50 rounded-lg p-3 border-2 border-green-200">
-                <p className="text-xs font-semibold text-green-700 mb-0.5">
+                <p className="text-xs font-semibold text-green-700 mb-0.5 text-center">
                   Taxa indicada ({taxaIndicada}%)
                 </p>
-                <p className="text-xl font-bold text-green-600">
+                <p className="text-xl font-bold text-green-600 text-center">
                   R$ {calcularValores(taxaIndicada).toFixed(2)}
                 </p>
-                <p className="text-xs text-green-600 mt-0.5">
+                <p className="text-xs text-green-600 mt-0.5 text-center">
                   Valor que você pagaria
                 </p>
               </div>
 
               <div
-                className="rounded-lg p-3 text-white"
-                style={{ backgroundColor: "#d10339" }}
+                className="rounded-lg p-3"
+                style={{ backgroundColor: "#103239", color: "#c3d800" }}
               >
-                <p className="text-xs font-semibold mb-0.5 opacity-90">
+                <p className="text-xs font-semibold mb-0.5 opacity-90 text-center">
                   Economia por transação
                 </p>
-                <p className="text-2xl font-bold">
+                <p className="text-2xl font-bold text-center">
                   R${" "}
                   {(
-                    calcularValores(suaTaxa) - calcularValores(taxaIndicada)
+                    calcularValores(taxaAtual) - calcularValores(taxaIndicada)
                   ).toFixed(2)}
                 </p>
-                <p className="text-xs opacity-75 mt-1">
+                <p className="text-xs opacity-75 mt-1 text-center">
                   Economia anual estimada: R${" "}
                   {(
-                    (calcularValores(suaTaxa) - calcularValores(taxaIndicada)) *
+                    (calcularValores(taxaAtual) -
+                      calcularValores(taxaIndicada)) *
                     12
                   ).toFixed(2)}
                 </p>
@@ -677,13 +824,15 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
             <div className="space-y-2">
               <button
                 onClick={() => setStep(5)}
-                className="w-full text-white py-2 rounded-lg font-semibold transition-all text-sm"
-                style={{ backgroundColor: "#d10339" }}
+                className="w-full py-2 rounded-lg font-semibold transition-all text-sm"
+                style={{ backgroundColor: "#103239", color: "#c3d800" }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = "#c3d800";
+                  e.currentTarget.style.color = "#103239";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "#d10339";
+                  e.currentTarget.style.backgroundColor = "#103239";
+                  e.currentTarget.style.color = "#c3d800";
                 }}
               >
                 Testar outra taxa
@@ -766,16 +915,18 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                     parseFloat(text.replace(",", ".")) || novaTaxa;
                   handleConfirmarTaxa(numValue);
                 }}
-                className="flex-1 text-white py-3 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
-                style={{ backgroundColor: "#d10339" }}
+                className="flex-1 py-3 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
+                style={{ backgroundColor: "#103239", color: "#c3d800" }}
                 onMouseEnter={(e) => {
                   if (!e.currentTarget.disabled) {
                     e.currentTarget.style.backgroundColor = "#c3d800";
+                    e.currentTarget.style.color = "#103239";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!e.currentTarget.disabled) {
-                    e.currentTarget.style.backgroundColor = "#d10339";
+                    e.currentTarget.style.backgroundColor = "#103239";
+                    e.currentTarget.style.color = "#c3d800";
                   }
                 }}
               >

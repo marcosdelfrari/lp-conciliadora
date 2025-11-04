@@ -52,8 +52,9 @@ export default function HeroSection({ onSimularVendas }: HeroSectionProps) {
             </svg>
           </div>
           <a
-            className="text-[16px] duration-300 transition-all font-fustat font-light tracking-wide flex gap-2 items-center py-3 px-4 w-fit rounded-full bg-[#103239] hover:bg-[#244C4E] text-[#c3d800]"
+            className="text-[16px] duration-300 transition-all font-light tracking-wide flex gap-2 items-center py-3 px-4 w-fit rounded-full bg-[#103239] hover:bg-[#244C4E] hover:text-white text-[#c3d800]"
             href="/login"
+            target="_blank"
           >
             Garanta essa taxa
             <ChevronRightIcon className="w-6 h-6" />

@@ -46,7 +46,7 @@ export default function SavingsCarousel({ items }: SavingsCarouselProps) {
   }
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full overflow-hidden">
       {/* Container do carousel */}
       <div
         ref={carouselRef}
