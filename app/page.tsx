@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Quiz from "./components/Quiz";
 import BackgroundCoins from "./components/BackgroundCoins";
@@ -10,7 +10,7 @@ import Footer from "./components/Footer";
 import { TabelaService } from "./services/tabelaService";
 import { UrlService } from "./services/urlService";
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams();
   const [mostrarCalculadora, setMostrarCalculadora] = useState(false);
 
@@ -49,5 +49,17 @@ export default function Home() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#103239]">
+        <div className="text-white">Carregando...</div>
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }
