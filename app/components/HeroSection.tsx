@@ -15,7 +15,7 @@ export default function HeroSection({ onSimularVendas }: HeroSectionProps) {
         </h1>
 
         <p className="text-xl lg:text-2xl text-[#103239]">
-          Compara suas condições atuais e mostra qual adquirente oferece o
+          Compara suas condições atuais e descubra qual adquirente oferece o
           melhor custo para o seu negócio.
         </p>
       </div>
