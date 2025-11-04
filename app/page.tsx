@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Quiz from "./components/Quiz";
 import BackgroundCoins from "./components/BackgroundCoins";
@@ -13,6 +13,43 @@ import { UrlService } from "./services/urlService";
 function HomeContent() {
   const searchParams = useSearchParams();
   const [mostrarCalculadora, setMostrarCalculadora] = useState(false);
+  const lastRefoIdRef = useRef<string | null>(null);
+
+  // Monitora o RefoId no localStorage
+  useEffect(() => {
+    // Verifica o RefoId inicial
+    const refoId = localStorage.getItem("RefoIds");
+    lastRefoIdRef.current = refoId;
+    console.log("RefoId inicial:", refoId);
+
+    // Listener para mudanças no localStorage (funciona entre abas/janelas)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "RefoIds") {
+        lastRefoIdRef.current = e.newValue;
+        console.log("RefoId atualizado (storage event):", e.newValue);
+      }
+    };
+
+    // Listener para mudanças no mesmo contexto (quando o banner modifica diretamente)
+    const checkRefoId = () => {
+      const currentRefoId = localStorage.getItem("RefoIds");
+      if (currentRefoId !== lastRefoIdRef.current) {
+        console.log("RefoId mudou para:", currentRefoId);
+        lastRefoIdRef.current = currentRefoId;
+      }
+    };
+
+    // Adiciona listeners
+    window.addEventListener("storage", handleStorageChange);
+    
+    // Verifica periodicamente para capturar mudanças no mesmo contexto
+    const intervalId = setInterval(checkRefoId, 1000);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(intervalId);
+    };
+  }, []);
 
   // Verifica se deve exibir o app (SavingsCarousel) ou o Quiz baseado no parâmetro da URL
   const exibirApp = UrlService.deveExibirApp(searchParams);

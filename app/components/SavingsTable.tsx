@@ -11,7 +11,7 @@ export default function SavingsTable({ data, nome }: SavingsTableProps) {
   const totalEconomia = data.reduce((sum, item) => sum + item.economia, 0);
 
   return (
-    <div className="space-y-4 p-4 lg:p-5">
+    <div className="space-y-4 p-4 lg:p-5 ">
       {/* Alerta de Economia */}
       <div className="relative rounded-lg p-3 lg:p-4 bg-[#c3d800] flex items-center justify-between gap-2">
       <div>  <p className="text-sm lg:text-base font-semibold mb-2 text-[#103239]">
