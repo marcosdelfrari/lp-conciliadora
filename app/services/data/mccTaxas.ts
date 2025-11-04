@@ -1,0 +1,660 @@
+import { TaxasPorModalidade } from "../../types";
+
+/**
+ * Converte uma string de porcentagem (ex: "0,76%") para número (ex: 0.76)
+ */
+function parsePercentagem(valor: string): number {
+  return parseFloat(valor.replace(",", ".").replace("%", "").trim());
+}
+
+/**
+ * Dados de taxas por MCC
+ * Estrutura: MCC -> Modalidade -> Bandeira -> Taxa
+ */
+export const MCC_TAXAS: Record<number, TaxasPorModalidade> = {
+  5813: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,65%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,87%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,11%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  5812: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,65%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,87%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,11%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  8021: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  8062: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  8071: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  8011: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  5047: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  8099: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  742: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  8299: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("0,67%"),
+      VISA: parsePercentagem("1,50%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("0,75%"),
+      VISA: parsePercentagem("1,81%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("0,81%"),
+      VISA: parsePercentagem("2,34%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  7832: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,71%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,93%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,17%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  5199: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,70%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,22%"),
+      VISA: parsePercentagem("1,24%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,43%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("1,71%"),
+      VISA: parsePercentagem("1,46%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,65%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("1,88%"),
+      VISA: parsePercentagem("1,87%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("2,89%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  5712: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,15%"),
+      ELO: parsePercentagem("2,80%"),
+      AMEX: parsePercentagem("2,43%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,37%"),
+      ELO: parsePercentagem("3,21%"),
+      AMEX: parsePercentagem("2,65%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,78%"),
+      ELO: parsePercentagem("3,61%"),
+      AMEX: parsePercentagem("2,89%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  5533: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  7997: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("0,67%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,71%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("0,75%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,93%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("0,81%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,17%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  8734: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  7261: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  7542: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  7538: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  8111: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  7216: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  7911: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,82%"),
+      VISA: parsePercentagem("2,02%"),
+      ELO: parsePercentagem("2,67%"),
+      AMEX: parsePercentagem("2,55%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,43%"),
+      VISA: parsePercentagem("2,24%"),
+      ELO: parsePercentagem("3,08%"),
+      AMEX: parsePercentagem("2,77%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,68%"),
+      VISA: parsePercentagem("2,65%"),
+      ELO: parsePercentagem("3,48%"),
+      AMEX: parsePercentagem("3,01%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+  7011: {
+    DEBITO: {
+      MASTER: parsePercentagem("0,76%"),
+      VISA: parsePercentagem("0,80%"),
+      ELO: parsePercentagem("1,30%"),
+    },
+    CREDITO_A_VISTA: {
+      MASTER: parsePercentagem("1,65%"),
+      VISA: parsePercentagem("2,15%"),
+      ELO: parsePercentagem("2,80%"),
+      AMEX: parsePercentagem("2,71%"),
+      HIPER: parsePercentagem("1,93%"),
+    },
+    CREDITO_2_A_6: {
+      MASTER: parsePercentagem("2,26%"),
+      VISA: parsePercentagem("2,37%"),
+      ELO: parsePercentagem("3,21%"),
+      AMEX: parsePercentagem("2,93%"),
+      HIPER: parsePercentagem("2,53%"),
+    },
+    CREDITO_7_A_12: {
+      MASTER: parsePercentagem("2,47%"),
+      VISA: parsePercentagem("2,78%"),
+      ELO: parsePercentagem("3,61%"),
+      AMEX: parsePercentagem("3,17%"),
+      HIPER: parsePercentagem("2,77%"),
+    },
+  },
+};
+
