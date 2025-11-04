@@ -33,6 +33,7 @@ export default function QuizSimulacao({
   const [novaTaxa, setNovaTaxa] = useState(suaTaxa);
   const taxaInputRef = useRef<HTMLDivElement>(null);
   const [taxaAlteradaManual, setTaxaAlteradaManual] = useState(false);
+  const stepAnteriorRef = useRef<number>(1);
 
   // Função para calcular taxa média baseada em bandeira e modalidade
   const calcularTaxaMedia = (
@@ -175,6 +176,20 @@ export default function QuizSimulacao({
     }
   }, [showTaxaModal]);
 
+  // Monitora quando o step chega a 4 e chama o callback de quiz completo
+  useEffect(() => {
+    if (step === 4 && onQuizCompleto) {
+      onQuizCompleto();
+      stepAnteriorRef.current = 4;
+    } else if (stepAnteriorRef.current === 4 && step !== 4 && onQuizReset) {
+      // Resetar quando sair do step 4 (se já estava no step 4 antes)
+      onQuizReset();
+      stepAnteriorRef.current = step;
+    } else {
+      stepAnteriorRef.current = step;
+    }
+  }, [step, onQuizCompleto, onQuizReset]);
+
   const modalidades = [
     { id: "debito", label: "Débito" },
     { id: "credito-vista", label: "Crédito Vista" },
@@ -205,13 +220,7 @@ export default function QuizSimulacao({
   const bandeiras = getBandeirasDisponiveis();
 
   const handleNext = () => {
-    const nextStep = step + 1;
-    setStep(nextStep);
-
-    // Quando chegar no step 4 (resultado), marca o quiz como completo
-    if (nextStep === 4 && onQuizCompleto) {
-      onQuizCompleto();
-    }
+    setStep(step + 1);
   };
 
   const handleBack = () => {

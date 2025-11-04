@@ -78,7 +78,7 @@ function HomeContent() {
               {/* Coluna Esquerda - Hero */}
               <HeroSection
                 onSimularVendas={() => setMostrarCalculadora(true)}
-                mostrarBotao={exibirApp || quizCompleto}
+                mostrarBotao={true}
               />
 
               {/* Coluna Direita - Carousel */}
@@ -123,10 +123,10 @@ function HomeContent() {
               </div>
 
               {/* Hero segundo em mobile, primeiro em desktop */}
-              <div className="order-2 lg:order-1">
+              <div className="order-2 lg:order-1 flex flex-col items-center justify-center">
                 <HeroSection
                   onSimularVendas={() => setMostrarCalculadora(true)}
-                  mostrarBotao={exibirApp || quizCompleto}
+                  mostrarBotao={true}
                 />
               </div>
             </>
