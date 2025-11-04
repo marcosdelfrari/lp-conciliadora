@@ -13,6 +13,7 @@ import { UrlService } from "./services/urlService";
 function HomeContent() {
   const searchParams = useSearchParams();
   const [mostrarCalculadora, setMostrarCalculadora] = useState(false);
+  const [quizCompleto, setQuizCompleto] = useState(false);
   const lastRefoIdRef = useRef<string | null>(null);
 
   // Monitora o RefoId no localStorage
@@ -41,7 +42,7 @@ function HomeContent() {
 
     // Adiciona listeners
     window.addEventListener("storage", handleStorageChange);
-    
+
     // Verifica periodicamente para capturar mudanças no mesmo contexto
     const intervalId = setInterval(checkRefoId, 1000);
 
@@ -68,19 +69,68 @@ function HomeContent() {
     <div className="min-h-screen flex items-center justify-center bg-[#103239] relative md:overflow-hidden">
       <BackgroundCoins />
 
-      <div className="container mx-auto px-4 py-12 max-w-7xl w-full relative z-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 bg-[#c3d800] min-h-[600px] rounded-4xl relative z-10">
-          {/* Coluna Esquerda */}
-          <HeroSection onSimularVendas={() => setMostrarCalculadora(true)} />
+      <div className="container mx-auto px-3 sm:px-4 py-12 sm:py-12 max-w-7xl w-full relative z-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 bg-[#c3d800] min-h-[500px] sm:min-h-[600px] rounded-2xl sm:rounded-4xl relative z-10 overflow-hidden">
+          {/* Em mobile: quando for Quiz, inverte a ordem (Quiz primeiro, Hero depois) */}
+          {/* Em desktop: Hero primeiro, Quiz depois */}
+          {deveExibirSavingsCarousel ? (
+            <>
+              {/* Coluna Esquerda - Hero */}
+              <HeroSection
+                onSimularVendas={() => setMostrarCalculadora(true)}
+                mostrarBotao={exibirApp || quizCompleto}
+              />
 
-          {/* Coluna Direita - Tabela/Calculadora */}
-          <div className="rounded-xl space-y-4 bg-gray-100 overflow-hidden">
-            {deveExibirSavingsCarousel ? (
-              <SavingsCarousel items={tabelaDataPorAdquirente} />
-            ) : (
-              <Quiz onVoltar={() => setMostrarCalculadora(false)} />
-            )}
-          </div>
+              {/* Coluna Direita - Carousel */}
+              <div className="rounded-xl sm:rounded-xl space-y-4 bg-gray-100 overflow-hidden relative">
+                <SavingsCarousel items={tabelaDataPorAdquirente} />
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Quiz primeiro em mobile, segundo em desktop */}
+              <div className="order-1 lg:order-2 rounded-xl sm:rounded-xl space-y-4 bg-gray-100 overflow-hidden relative">
+                <Quiz
+                  onVoltar={() => setMostrarCalculadora(false)}
+                  onQuizCompleto={() => setQuizCompleto(true)}
+                  onQuizReset={() => setQuizCompleto(false)}
+                />
+                {/* Botão "Garanta essa taxa" abaixo do Quiz em mobile quando completo */}
+                {quizCompleto && (
+                  <div className="lg:hidden px-4 pb-4">
+                    <a
+                      className="text-sm duration-300 transition-all font-light tracking-wide flex gap-2 items-center py-2.5 px-4 w-full rounded-full bg-[#103239] hover:bg-[#244C4E] hover:text-white text-[#c3d800] justify-center"
+                      href="/login"
+                      target="_blank"
+                    >
+                      Garanta essa taxa
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              {/* Hero segundo em mobile, primeiro em desktop */}
+              <div className="order-2 lg:order-1">
+                <HeroSection
+                  onSimularVendas={() => setMostrarCalculadora(true)}
+                  mostrarBotao={exibirApp || quizCompleto}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
 

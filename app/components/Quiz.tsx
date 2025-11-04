@@ -8,9 +8,15 @@ import { Bandeira, Modalidade } from "../types";
 
 interface QuizSimulacaoProps {
   onVoltar?: () => void;
+  onQuizCompleto?: () => void;
+  onQuizReset?: () => void;
 }
 
-export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
+export default function QuizSimulacao({
+  onVoltar,
+  onQuizCompleto,
+  onQuizReset,
+}: QuizSimulacaoProps = {}) {
   const [step, setStep] = useState(1);
   const [valorVenda, setValorVenda] = useState(1000);
   const [suaTaxa, setSuaTaxa] = useState(4.0);
@@ -199,7 +205,13 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
   const bandeiras = getBandeirasDisponiveis();
 
   const handleNext = () => {
-    setStep(step + 1);
+    const nextStep = step + 1;
+    setStep(nextStep);
+
+    // Quando chegar no step 4 (resultado), marca o quiz como completo
+    if (nextStep === 4 && onQuizCompleto) {
+      onQuizCompleto();
+    }
   };
 
   const handleBack = () => {
@@ -214,6 +226,10 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
     setModalidade(null);
     setBandeira(null);
     setEscolha(null);
+    // Resetar estado de quiz completo no componente pai
+    if (onQuizReset) {
+      onQuizReset();
+    }
   };
 
   const handleTestarTaxa = () => {
@@ -244,10 +260,10 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
 
   return (
     <div className="bg-white w-full h-full rounded-xl relative flex flex-col items-center justify-center">
-      <div className=" mx-auto rounded-xl w-full ">
-        <div className="mb-4">
+      <div className="mx-auto rounded-xl w-full overflow-y-auto max-h-full">
+        <div className="mb-3 sm:mb-4 px-3 sm:px-4 pt-3 sm:pt-4">
           <div className="flex items-center justify-center mb-2"></div>
-          <p className="text-xs text-gray-500 text-center">
+          <p className="text-[10px] sm:text-xs text-gray-500 text-center">
             {step === 1 && "Etapa 1: Valor da venda"}
             {step === 2 && "Etapa 2: Sua modalidade"}
             {step === 3 && "Etapa 3: Sua bandeira"}
@@ -259,11 +275,11 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
         </div>
 
         {step === 1 && (
-          <div className="bg-white rounded-lg p-4 transition-all">
-            <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
+          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 text-center">
               Qual o valor da venda?
             </h2>
-            <p className="text-sm text-gray-600 mb-4 text-center">
+            <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 text-center">
               Insira o valor da transação que deseja simular.
             </p>
 
@@ -291,7 +307,7 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
             <button
               onClick={handleNext}
               disabled={!valorVenda || valorVenda <= 0}
-              className="w-full mt-4 py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
+              className="w-full mt-3 sm:mt-4 py-2.5 sm:py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-xs sm:text-sm"
               style={{ backgroundColor: "#103239", color: "#c3d800" }}
               onMouseEnter={(e) => {
                 if (!e.currentTarget.disabled) {
@@ -312,11 +328,11 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
         )}
 
         {step === 2 && (
-          <div className="bg-white rounded-lg p-4 transition-all">
-            <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
+          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 text-center">
               Qual a modalidade?
             </h2>
-            <p className="text-sm text-gray-600 mb-4 text-center">
+            <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 text-center">
               Selecione a forma de pagamento.
             </p>
 
@@ -384,17 +400,17 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
               ))}
             </div>
 
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-2 mt-3 sm:mt-4">
               <button
                 onClick={handleBack}
-                className="flex-1 bg-gray-100 text-gray-900 py-2 rounded-lg font-semibold hover:bg-gray-200 transition-all text-sm"
+                className="flex-1 bg-gray-100 text-gray-900 py-2.5 sm:py-2 rounded-lg font-semibold hover:bg-gray-200 transition-all text-xs sm:text-sm"
               >
                 Voltar
               </button>
               <button
                 onClick={handleNext}
                 disabled={!modalidade}
-                className="flex-1 py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
+                className="flex-1 py-2.5 sm:py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-xs sm:text-sm"
                 style={{ backgroundColor: "#103239", color: "#c3d800" }}
                 onMouseEnter={(e) => {
                   if (!e.currentTarget.disabled) {
@@ -416,11 +432,11 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
         )}
 
         {step === 3 && (
-          <div className="bg-white rounded-lg p-4 transition-all">
-            <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
+          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 text-center">
               Qual a bandeira?
             </h2>
-            <p className="text-sm text-gray-600 mb-4 text-center">
+            <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 text-center">
               Selecione a bandeira do cartão.
             </p>
 
@@ -476,17 +492,17 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
               ))}
             </div>
 
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-2 mt-3 sm:mt-4">
               <button
                 onClick={handleBack}
-                className="flex-1 bg-gray-100 text-gray-900 py-2 rounded-lg font-semibold hover:bg-gray-200 transition-all text-sm"
+                className="flex-1 bg-gray-100 text-gray-900 py-2.5 sm:py-2 rounded-lg font-semibold hover:bg-gray-200 transition-all text-xs sm:text-sm"
               >
                 Voltar
               </button>
               <button
                 onClick={handleNext}
                 disabled={!bandeira}
-                className="flex-1 py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
+                className="flex-1 py-2.5 sm:py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-xs sm:text-sm"
                 style={{ backgroundColor: "#103239", color: "#c3d800" }}
                 onMouseEnter={(e) => {
                   if (!e.currentTarget.disabled) {
@@ -508,10 +524,10 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
         )}
 
         {step === 4 && (
-          <div className=" rounded-lg p-4 transition-all">
-            <div className="space-y-4 mb-6">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 text-center">
+          <div className="rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4">
+            <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
+              <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
+                <p className="text-[10px] sm:text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 text-center">
                   Valor da venda
                 </p>
                 <CustomInput
@@ -532,9 +548,9 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 text-center">
+              <div className="grid grid-cols-2 gap-2 sm:gap-4">
+                <div className="bg-gray-50 rounded-lg p-2 sm:p-4">
+                  <p className="text-[10px] sm:text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 text-center">
                     Modalidade
                   </p>
                   <CustomSelect
@@ -545,8 +561,8 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                   />
                 </div>
 
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 text-center">
+                <div className="bg-gray-50 rounded-lg p-2 sm:p-4">
+                  <p className="text-[10px] sm:text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5 text-center">
                     Bandeira
                   </p>
                   <CustomSelect
@@ -559,15 +575,15 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-4 ">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 text-center">
+            <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-3 sm:mb-4">
+              <div className="bg-gray-50 rounded-lg p-2 sm:p-4">
+                <p className="text-[10px] sm:text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1 sm:mb-2 text-center">
                   {taxaAlteradaManual ? "Sua taxa" : "Taxa média"}
                 </p>
-                <p className="text-2xl font-bold mb-1 text-gray-900 text-center">
+                <p className="text-lg sm:text-2xl font-bold mb-1 text-gray-900 text-center">
                   {taxaAtual.toFixed(2)}%
                 </p>
-                <p className="text-sm text-gray-600 text-center">
+                <p className="text-xs sm:text-sm text-gray-600 text-center">
                   R${" "}
                   {calcularValores(taxaAtual).toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
@@ -577,16 +593,16 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
               </div>
 
               <div
-                className="rounded-lg p-4"
+                className="rounded-lg p-2 sm:p-4"
                 style={{ backgroundColor: "#103239", color: "#c3d800" }}
               >
-                <p className="text-xs font-semibold opacity-90 uppercase tracking-wide mb-2 text-center">
+                <p className="text-[10px] sm:text-xs font-semibold opacity-90 uppercase tracking-wide mb-1 sm:mb-2 text-center">
                   Taxa indicada
                 </p>
-                <p className="text-2xl font-bold mb-1 text-center">
+                <p className="text-lg sm:text-2xl font-bold mb-1 text-center">
                   {taxaIndicada}%
                 </p>
-                <p className="text-sm opacity-75 text-center">
+                <p className="text-xs sm:text-sm opacity-75 text-center">
                   R${" "}
                   {calcularValores(taxaIndicada).toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
@@ -597,7 +613,7 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
 
               <button
                 onClick={handleAbrirModalTaxa}
-                className="col-span-2 rounded-full cursor-pointer text-sm text-center tracking-wide transition-opacity hover:opacity-90 text-gray-500 underline"
+                className="col-span-2 rounded-full cursor-pointer text-xs sm:text-sm text-center tracking-wide transition-opacity hover:opacity-90 text-gray-500 underline py-1"
               >
                 Alterar taxa média manualmente
               </button>
@@ -606,11 +622,11 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
         )}
 
         {step === 5 && (
-          <div className="bg-white rounded-lg p-4 transition-all">
-            <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
+          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 text-center">
               O que deseja fazer?
             </h2>
-            <p className="text-sm text-gray-600 mb-4 text-center">
+            <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 text-center">
               Escolha uma das opções abaixo.
             </p>
 
@@ -677,11 +693,11 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
         )}
 
         {step === 6 && (
-          <div className="bg-white rounded-lg p-4 transition-all">
-            <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">
+          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 text-center">
               Qual sua taxa atual?
             </h2>
-            <p className="text-sm text-gray-600 mb-4 text-center">
+            <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 text-center">
               Insira a taxa que você paga atualmente para compararmos.
             </p>
 
@@ -704,10 +720,10 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
               </div>
             </div>
 
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-2 mt-3 sm:mt-4">
               <button
                 onClick={() => setStep(5)}
-                className="flex-1 bg-gray-100 text-gray-900 py-2 rounded-lg font-semibold hover:bg-gray-200 transition-all text-sm"
+                className="flex-1 bg-gray-100 text-gray-900 py-2.5 sm:py-2 rounded-lg font-semibold hover:bg-gray-200 transition-all text-xs sm:text-sm"
               >
                 Voltar
               </button>
@@ -717,7 +733,7 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                   handleNext();
                 }}
                 disabled={!suaTaxa || suaTaxa <= 0}
-                className="flex-1 py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
+                className="flex-1 py-2.5 sm:py-2 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-xs sm:text-sm"
                 style={{ backgroundColor: "#103239", color: "#c3d800" }}
                 onMouseEnter={(e) => {
                   if (!e.currentTarget.disabled) {
@@ -739,11 +755,11 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
         )}
 
         {step === 7 && (
-          <div className="bg-white rounded-lg p-4 transition-all">
-            <div className="text-center mb-4">
-              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+          <div className="bg-white rounded-lg p-3 sm:p-4 transition-all px-3 sm:px-4">
+            <div className="text-center mb-3 sm:mb-4">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
                 <svg
-                  className="w-5 h-5 text-green-600"
+                  className="w-4 h-4 sm:w-5 sm:h-5 text-green-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -756,61 +772,61 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-bold text-gray-900 mb-1">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-1">
                 Comparação de taxas
               </h2>
-              <p className="text-sm text-gray-600">
+              <p className="text-xs sm:text-sm text-gray-600">
                 Veja quanto você pode economizar
               </p>
             </div>
 
-            <div className="space-y-2 mb-4">
+            <div className="space-y-2 mb-3 sm:mb-4">
               <div
-                className="rounded-lg p-3 border-2"
+                className="rounded-lg p-2.5 sm:p-3 border-2"
                 style={{
                   backgroundColor: "#103239",
                   borderColor: "#103239",
                   color: "#c3d800",
                 }}
               >
-                <p className="text-xs font-semibold mb-0.5 opacity-90 text-center">
+                <p className="text-[10px] sm:text-xs font-semibold mb-0.5 opacity-90 text-center">
                   {taxaAlteradaManual ? "Sua taxa" : "Taxa média"} (
                   {taxaAtual.toFixed(2)}%)
                 </p>
-                <p className="text-xl font-bold text-center">
+                <p className="text-lg sm:text-xl font-bold text-center">
                   R$ {calcularValores(taxaAtual).toFixed(2)}
                 </p>
-                <p className="text-xs mt-0.5 opacity-75 text-center">
+                <p className="text-[10px] sm:text-xs mt-0.5 opacity-75 text-center">
                   Valor que você paga por transação
                 </p>
               </div>
 
-              <div className="bg-green-50 rounded-lg p-3 border-2 border-green-200">
-                <p className="text-xs font-semibold text-green-700 mb-0.5 text-center">
+              <div className="bg-green-50 rounded-lg p-2.5 sm:p-3 border-2 border-green-200">
+                <p className="text-[10px] sm:text-xs font-semibold text-green-700 mb-0.5 text-center">
                   Taxa indicada ({taxaIndicada}%)
                 </p>
-                <p className="text-xl font-bold text-green-600 text-center">
+                <p className="text-lg sm:text-xl font-bold text-green-600 text-center">
                   R$ {calcularValores(taxaIndicada).toFixed(2)}
                 </p>
-                <p className="text-xs text-green-600 mt-0.5 text-center">
+                <p className="text-[10px] sm:text-xs text-green-600 mt-0.5 text-center">
                   Valor que você pagaria
                 </p>
               </div>
 
               <div
-                className="rounded-lg p-3"
+                className="rounded-lg p-2.5 sm:p-3"
                 style={{ backgroundColor: "#103239", color: "#c3d800" }}
               >
-                <p className="text-xs font-semibold mb-0.5 opacity-90 text-center">
+                <p className="text-[10px] sm:text-xs font-semibold mb-0.5 opacity-90 text-center">
                   Economia por transação
                 </p>
-                <p className="text-2xl font-bold text-center">
+                <p className="text-xl sm:text-2xl font-bold text-center">
                   R${" "}
                   {(
                     calcularValores(taxaAtual) - calcularValores(taxaIndicada)
                   ).toFixed(2)}
                 </p>
-                <p className="text-xs opacity-75 mt-1 text-center">
+                <p className="text-[10px] sm:text-xs opacity-75 mt-1 text-center">
                   Economia anual estimada: R${" "}
                   {(
                     (calcularValores(taxaAtual) -
@@ -824,7 +840,7 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
             <div className="space-y-2">
               <button
                 onClick={() => setStep(5)}
-                className="w-full py-2 rounded-lg font-semibold transition-all text-sm"
+                className="w-full py-2.5 sm:py-2 rounded-lg font-semibold transition-all text-xs sm:text-sm"
                 style={{ backgroundColor: "#103239", color: "#c3d800" }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = "#c3d800";
@@ -839,7 +855,7 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
               </button>
               <button
                 onClick={handleReset}
-                className="w-full bg-gray-100 text-gray-900 py-2 rounded-lg font-semibold hover:bg-gray-200 transition-all text-sm"
+                className="w-full bg-gray-100 text-gray-900 py-2.5 sm:py-2 rounded-lg font-semibold hover:bg-gray-200 transition-all text-xs sm:text-sm"
               >
                 Fazer nova simulação
               </button>
@@ -851,14 +867,14 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
       {/* Modal de Alteração de Taxa */}
       {showTaxaModal && (
         <div
-          className="absolute inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-sm "
+          className="absolute inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-sm p-3 sm:p-4"
           onClick={handleCancelarTaxa}
         >
           <div
-            className="bg-white rounded-xl p-6 max-w-md w-full mx-4 animate-in fade-in zoom-in duration-200"
+            className="bg-white rounded-xl p-4 sm:p-6 max-w-md w-full mx-4 animate-in fade-in zoom-in duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-bold text-gray-900 mb-4">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">
               Alterar Taxa
             </h3>
 
@@ -895,16 +911,18 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                     handleConfirmarTaxa(numValue);
                   }
                 }}
-                className="flex-1 rounded-lg   text-2xl font-bold text-gray-900 focus:outline-none focus:ring-0 focus:ring-black min-w-0"
+                className="flex-1 rounded-lg text-xl sm:text-2xl font-bold text-gray-900 focus:outline-none focus:ring-0 focus:ring-black min-w-0"
               >
                 {novaTaxa}
               </div>
-              <span className="text-2xl font-bold text-gray-500">%</span>
+              <span className="text-xl sm:text-2xl font-bold text-gray-500">
+                %
+              </span>
             </div>
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-2 sm:gap-3 pt-3 sm:pt-4">
               <button
                 onClick={handleCancelarTaxa}
-                className="flex-1 bg-gray-100 text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all text-sm"
+                className="flex-1 bg-gray-100 text-gray-900 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all text-xs sm:text-sm"
               >
                 Cancelar
               </button>
@@ -915,7 +933,7 @@ export default function QuizSimulacao({ onVoltar }: QuizSimulacaoProps = {}) {
                     parseFloat(text.replace(",", ".")) || novaTaxa;
                   handleConfirmarTaxa(numValue);
                 }}
-                className="flex-1 py-3 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
+                className="flex-1 py-2.5 sm:py-3 rounded-lg font-semibold transition-all disabled:bg-gray-300 disabled:cursor-not-allowed text-xs sm:text-sm"
                 style={{ backgroundColor: "#103239", color: "#c3d800" }}
                 onMouseEnter={(e) => {
                   if (!e.currentTarget.disabled) {

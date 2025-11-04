@@ -4,25 +4,26 @@ import { ChevronRightIcon } from "lucide-react";
 
 interface HeroSectionProps {
   onSimularVendas: () => void;
+  mostrarBotao?: boolean;
 }
 
-export default function HeroSection({ onSimularVendas }: HeroSectionProps) {
+export default function HeroSection({ onSimularVendas, mostrarBotao = true }: HeroSectionProps) {
   return (
-    <div className="flex flex-col justify-center space-y-14 px-4 lg:px-12">
-      <div className="space-y-3">
-        <h1 className="text-5xl lg:text-6xl font-bold text-[#103239]">
+    <div className="flex flex-col justify-center space-y-6 sm:space-y-8 lg:space-y-14 px-4 sm:px-6 lg:px-12 py-6 sm:py-8 lg:py-0">
+      <div className="space-y-2 sm:space-y-3">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#103239] leading-tight">
           Pare de perder dinheiro com taxas altas
         </h1>
 
-        <p className="text-xl lg:text-2xl text-[#103239]">
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#103239] leading-relaxed">
           Compara suas condições atuais e descubra qual adquirente oferece o
           melhor custo para o seu negócio.
         </p>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-6 sm:space-y-8">
         <div>
-          <div className="relative">
+          <div className="relative hidden sm:block">
             <svg
               className="absolute right-[45%] -top-[70px]"
               xmlns="http://www.w3.org/2000/svg"
@@ -51,16 +52,16 @@ export default function HeroSection({ onSimularVendas }: HeroSectionProps) {
               ></path>
             </svg>
           </div>
-          <a
-            className="text-[16px] duration-300 transition-all font-light tracking-wide flex gap-2 items-center py-3 px-4 w-fit rounded-full bg-[#103239] hover:bg-[#244C4E] hover:text-white text-[#c3d800]"
-            href="/login"
-            target="_blank"
-          >
-            Garanta essa taxa
-            <ChevronRightIcon className="w-6 h-6" />
-          </a>
-        
-       
+          {mostrarBotao && (
+            <a
+              className="hidden lg:flex text-sm sm:text-base duration-300 transition-all font-light tracking-wide gap-2 items-center py-2.5 sm:py-3 px-4 sm:px-5 w-fit rounded-full bg-[#103239] hover:bg-[#244C4E] hover:text-white text-[#c3d800] justify-start"
+              href="/login"
+              target="_blank"
+            >
+              Garanta essa taxa
+              <ChevronRightIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+            </a>
+          )}
         </div>
       </div>
     </div>

@@ -46,7 +46,7 @@ export default function SavingsCarousel({ items }: SavingsCarouselProps) {
   }
 
   return (
-    <div className="relative w-full h-full overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden min-h-[400px] sm:min-h-[500px]">
       {/* Container do carousel */}
       <div
         ref={carouselRef}
@@ -56,7 +56,7 @@ export default function SavingsCarousel({ items }: SavingsCarouselProps) {
         onTouchEnd={onTouchEnd}
       >
         <div
-          className="flex transition-transform duration-300 ease-in-out h-full "
+          className="flex transition-transform duration-300 ease-in-out h-full"
           style={{
             transform: `translateX(-${currentIndex * 100}%)`,
           }}
@@ -64,7 +64,7 @@ export default function SavingsCarousel({ items }: SavingsCarouselProps) {
           {items.map((item, index) => (
             <div key={index} className="min-w-full h-full flex-shrink-0">
               {/* Tabela de economia */}
-              <div className="h-[calc(100%-60px)] overflow-y-auto">
+              <div className="h-[calc(100%-50px)] sm:h-[calc(100%-60px)] overflow-y-auto">
                 <SavingsTable data={item.data} nome={item.nome} />
               </div>
             </div>
@@ -74,15 +74,15 @@ export default function SavingsCarousel({ items }: SavingsCarouselProps) {
 
       {/* Indicadores (dots) */}
       {items.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+        <div className="absolute bottom-3 sm:bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
           {items.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={`transition-all duration-300 rounded-full ${
                 index === currentIndex
-                  ? "bg-[#103239] w-8 h-2"
-                  : "bg-[#103239] opacity-40 w-2 h-2"
+                  ? "bg-[#103239] w-6 sm:w-8 h-1.5 sm:h-2"
+                  : "bg-[#103239] opacity-40 w-1.5 sm:w-2 h-1.5 sm:h-2"
               }`}
               aria-label={`Ir para slide ${index + 1}`}
             />
